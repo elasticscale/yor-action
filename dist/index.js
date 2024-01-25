@@ -55,12 +55,14 @@ function getArgs(flag, input) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const githubRef = process.env.GITHUB_EVENT_NAME === 'pull_request'
-            ? process.env.GITHUB_HEAD_REF
-            : process.env.GITHUB_REF;
-        yield exec.exec(`git switch ${githubRef}`);
-        const yorVersion = core.getInput('version');
         const commitChanges = core.getBooleanInput('commit_changes');
+        if (commitChanges) {
+            const githubRef = process.env.GITHUB_EVENT_NAME === 'pull_request'
+                ? process.env.GITHUB_HEAD_REF
+                : process.env.GITHUB_REF_NAME;
+            yield exec.exec(`git switch ${githubRef}`);
+        }
+        const yorVersion = core.getInput('version');
         // Computing args
         const yorArgs = [
             'tag',
